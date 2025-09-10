@@ -44,7 +44,7 @@ public class ArduinoConnection : MonoBehaviour
             float yRotation = yNormalized * rotaionSpeed * Time.deltaTime;
 
             transform.Rotate(xRotation, yRotation, 0, Space.Self);
-            //transform.position = new Vector3(xRotation, yRotation, 0);
+            transform.position = new Vector3(xRotation, yRotation, 0);
         }
 
         
