@@ -8,7 +8,7 @@ public class ArduinoConnection : MonoBehaviour
     void Start()
     {
         serial.Open();
-        serial.ReadTimeout = 100;
+        serial.ReadTimeout = 200;
     }
 
     // Update is called once per frame
