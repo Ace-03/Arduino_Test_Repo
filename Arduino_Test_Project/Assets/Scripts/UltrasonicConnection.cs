@@ -19,7 +19,6 @@ public class UltrasonicConnection : MonoBehaviour
         Debug.Log("Recevied: '" + data + "'");
         float value = float.Parse(data);
        
-
         transform.position = new Vector3(value, 0, 0);
         
         /*
