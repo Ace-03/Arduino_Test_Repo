@@ -18,7 +18,7 @@ public class UltrasonicConnection : MonoBehaviour
         string data = serial.ReadLine();
         Debug.Log("Recevied: '" + data + "'");
         float value = float.Parse(data);
-       
+        
         transform.position = new Vector3(value, 0, 0);
         
         /*
