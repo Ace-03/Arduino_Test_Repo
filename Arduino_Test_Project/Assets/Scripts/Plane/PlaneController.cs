@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlaneController : MonoBehaviour
@@ -45,6 +46,46 @@ public class PlaneController : MonoBehaviour
             float launchMagnitude = Mathf.Clamp(dragVector.magnitude, 0, 200);
             rb.AddForce(launchDirection * launchMagnitude * launchForceMultiplier, ForceMode.Impulse);
         }
+    }
 
+    private void FixedUpdate()
+    {
+        ApplyAerodynamics();
+
+        HandlePlayerInput();
+
+        AlignToVelocity();
+    }
+
+    private void ApplyAerodynamics()
+    {
+        float forwardSpeed = rb.linearVelocity.magnitude;
+
+        if (forwardSpeed < 0.1f) return;
+
+        float angleOfAttack = Vector3.Angle(rb.linearVelocity, transform.forward);
+        float liftForce = (float)(0.5 * airDensity * Mathf.Pow(forwardSpeed, 2) * dragCoefficient * wingArea);
+        rb.AddForce(transform.up * liftForce, ForceMode.Force);
+
+        float dragForce = (float)(0.5 * airDensity * Mathf.Pow(forwardSpeed, 2) * dragCoefficient * wingArea);
+        rb.AddForce(-rb.linearVelocity.normalized * dragForce, ForceMode.Force);
+    }
+
+    private void HandlePlayerInput()
+    {
+        float pitchInput = Input.GetAxis("Vertical");
+        float rollInput = Input.GetAxis("Horizontal");
+
+        rb.AddTorque(transform.right * pitchInput * pitchTorque, ForceMode.Force);
+        rb.AddTorque(transform.forward * -rollInput * rollTorque, ForceMode.Force);
+    }
+
+    private void AlignToVelocity()
+    {
+        if (rb.linearVelocity.magnitude > 0.01f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(rb.linearVelocity, Vector3.up);
+            rb.MoveRotation(targetRotation);
+        }
     }
 }
