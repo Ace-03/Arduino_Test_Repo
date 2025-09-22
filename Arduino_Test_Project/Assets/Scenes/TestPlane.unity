@@ -47027,11 +47027,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf0394750b94836489e8ba1fc4a073b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerTransform: {fileID: 1500313909}
+  PlayerTransform: {fileID: 0}
   SmoothTime: 0
-  Sensitivity: 500
-  MaxViewRange: 90
-  Offset: {x: -10, y: 2, z: 0}
+  Sensitivity: 0
+  MaxViewRange: 0
+  Offset: {x: 0, y: 0, z: 0}
 --- !u!1001 &1014145386
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -72042,6 +72042,11 @@ MonoBehaviour:
   TiltStrength: 500
   LowPercent: 1
   HighPercent: 1
+  CurrentThrustSpeed: 0
+  TiltValue: 0
+  LerpValue: 0
+  CameraTransform: {fileID: 0}
+  Rb: {fileID: 0}
 --- !u!1001 &1500506630
 PrefabInstance:
   m_ObjectHideFlags: 0
