@@ -25,7 +25,7 @@ public class GlidingSystem : MonoBehaviour
     void UpdateRotation(float rotationAdjustment)
     {
         Vector3 currentRotation = transform.localEulerAngles;
-        Vector3 newRotation = new Vector3(currentRotation.x, currentRotation.y, currentRotation.z + rotationAdjustment);
+        Vector3 newRotation = new Vector3(currentRotation.x + rotationAdjustment, currentRotation.y, currentRotation.z);
 
         transform.rotation = Quaternion.Euler(newRotation);
         AdjustDampening();
@@ -41,7 +41,8 @@ public class GlidingSystem : MonoBehaviour
 
     void ApplyForwardForce()
     {
-        Vector3 forwardForce = transform.localEulerAngles * maxGlideSpeed;
+        Vector3 forwardForce = transform.forward.normalized * maxGlideSpeed;
+        Debug.DrawRay(transform.position, forwardForce * 10);
         rb.AddForce(forwardForce, ForceMode.Acceleration);
     }
 }
