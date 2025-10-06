@@ -6,6 +6,8 @@ public class GlidingSystem : MonoBehaviour
     private float maxGlideSpeed = 10f;
     [SerializeField]
     private float maxDampening = 10f;
+    [SerializeField]
+    private float turnSpeed = 1f;
 
     private Rigidbody rb;
 
@@ -14,10 +16,10 @@ public class GlidingSystem : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         float verticalInput = Input.GetAxis("Vertical");
-        UpdateRotation(verticalInput);
+        UpdateRotation(verticalInput * turnSpeed);
         ApplyForwardForce();
     }
 
@@ -27,13 +29,16 @@ public class GlidingSystem : MonoBehaviour
         Vector3 currentRotation = transform.localEulerAngles;
         Vector3 newRotation = new Vector3(currentRotation.x + rotationAdjustment, currentRotation.y, currentRotation.z);
 
+        if ((newRotation.x <= 180 && newRotation.x >= 70) || (newRotation.x > 180 && newRotation.x <= 290))
+            return;
+
         transform.rotation = Quaternion.Euler(newRotation);
         AdjustDampening();
     }
 
     void AdjustDampening()
     {
-        float verticalCos = Mathf.Abs(Mathf.Cos(Mathf.Deg2Rad * transform.localEulerAngles.z));
+        float verticalCos = Mathf.Abs(Mathf.Cos(Mathf.Deg2Rad * transform.localEulerAngles.x));
         Debug.Log(verticalCos);
         Debug.Log(transform.localEulerAngles);
         rb.linearDamping = verticalCos * maxDampening;
@@ -42,7 +47,7 @@ public class GlidingSystem : MonoBehaviour
     void ApplyForwardForce()
     {
         Vector3 forwardForce = transform.forward.normalized * maxGlideSpeed;
-        Debug.DrawRay(transform.position, forwardForce * 10);
+        Debug.DrawRay(transform.position, forwardForce * 10 * rb.linearDamping);
         rb.AddForce(forwardForce, ForceMode.Acceleration);
     }
 }
