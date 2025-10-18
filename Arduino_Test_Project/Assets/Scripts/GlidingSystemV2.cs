@@ -11,8 +11,18 @@ public class GlidingSystemV2 : MonoBehaviour
     private float airDensity = 1.225f; // Density of air (standard at sea level)
     [SerializeField]
     private float wingArea = 2f; // Conceptual wing area (adjust for overall effect)
+
+    [Header("Turning Controls")] // New Header for clarity
+
     [SerializeField]
-    private float turnSpeed = 1f;
+    private float pitchSpeed = 1f; // Renamed for clarity (was turnSpeed)
+    [SerializeField]
+    private float yawSpeed = 1f; // New variable for left/right turning
+    [SerializeField]
+    private float rollLimit = 45f; // Limits the roll angle for banking
+
+    [HideInInspector]
+    public bool pitchLocked = false; // Public variable to lock rotation when needed
 
     private Rigidbody rb;
 
@@ -28,7 +38,9 @@ public class GlidingSystemV2 : MonoBehaviour
     void FixedUpdate()
     {
         float verticalInput = Input.GetAxis("Vertical");
-        UpdateRotation(verticalInput * turnSpeed);
+        float horizontalInput = Input.GetAxis("Horizontal");
+
+            UpdateRotation(-verticalInput * pitchSpeed, horizontalInput * yawSpeed);
 
         // Physics calculations should be in FixedUpdate
         ApplyFlightForces();
@@ -38,21 +50,40 @@ public class GlidingSystemV2 : MonoBehaviour
     // Rotation and Input
     // --------------------------------------------------------------------------------
 
-    void UpdateRotation(float rotationAdjustment)
+    void UpdateRotation(float pitchAdjustment, float yawAdjustment)
     {
         Vector3 currentRotation = transform.localEulerAngles;
-        // Adjust the X-axis (pitch)
-        float newPitch = currentRotation.x + rotationAdjustment;
+        float newPitch = currentRotation.x;
 
-        // Simple clamping to prevent excessive flipping (optional)
-        // Adjust these values to suit your desired pitch limits.
-        if (newPitch > 180f)
+        // 1. Pitch (X-axis, up/down)
+        if (!pitchLocked)
         {
-            newPitch -= 360f; // Handle wrap-around for negative angles
-        }
-        newPitch = Mathf.Clamp(newPitch, -70f, 70f); // Example: between -80 (dive) and 80 (climb)
+            newPitch += pitchAdjustment;
 
-        transform.localRotation = Quaternion.Euler(newPitch, currentRotation.y, currentRotation.z);
+            // Handle wrap-around for negative angles
+            if (newPitch > 180f)
+            {
+                newPitch -= 360f;
+            }
+            // Clamp pitch to prevent over-rotation
+            newPitch = Mathf.Clamp(newPitch, -85f, 85f);
+        }
+
+        // 2. Yaw (Y-axis, left/right)
+        // Apply rotation directly to the Y-axis (global or local, depending on desired control)
+        // Using Space.Self ensures the turn is relative to the glider's current facing
+        transform.Rotate(Vector3.up, yawAdjustment * Time.fixedDeltaTime * 60f, Space.Self);
+
+        // 3. Roll (Z-axis, banking for aesthetics)
+        // Smoothly rotate the glider on the Z-axis (roll) based on yaw input.
+        // This adds a "banking" effect to make the turn feel more realistic.
+        float targetRoll = yawAdjustment * rollLimit; // Negative to tilt in the turn direction
+        float newRoll = Mathf.LerpAngle(currentRotation.z, targetRoll, Time.fixedDeltaTime * 5f);
+
+        // 4. Apply all rotations
+        // Since we used transform.Rotate for Yaw, we only need to set Pitch and Roll
+        // The Y rotation from transform.Rotate is preserved.
+        transform.localRotation = Quaternion.Euler(newPitch, transform.localEulerAngles.y, newRoll);
     }
 
     // --------------------------------------------------------------------------------
@@ -75,30 +106,26 @@ public class GlidingSystemV2 : MonoBehaviour
         Vector3 dragForce = dragDirection * dragMagnitude;
         rb.AddForce(dragForce, ForceMode.Force);
 
-        // 2. Lift Force (Perpendicular to velocity, and generally upwards relative to the plane)
-        // Lift is proportional to the **Angle of Attack (AoA)**.
-        // AoA is the angle between the plane's forward direction (transform.forward) 
-        // and the direction of travel (velocity.normalized).
+        // 1. Calculate SIGNED Angle of Attack (AoA)
+        // angle between the travel vector (velocity) and the wing's forward vector (transform.forward)
+        // The axis of rotation is the glider's right vector (transform.right)
+        float aoaDegrees = Vector3.SignedAngle(velocity, transform.forward, transform.right);
+        float aoaRadians = aoaDegrees * Mathf.Deg2Rad;
 
-        // Calculate Angle of Attack (AoA) in radians
-        float aoa = Vector3.Angle(transform.forward, velocity) * Mathf.Deg2Rad;
+        // 2. Simplified Lift Magnitude
+        // Use the signed AoA (or its sin) to determine if lift is positive (up) or negative (downforce)
+        float liftMagnitude = 0.5f * airDensity * speed * speed * liftCoefficient * wingArea * Mathf.Sin(aoaRadians);
 
-        // Simplified Lift Magnitude: proportional to speed squared and AoA
-        // Formula: F_L = 0.5 * rho * v^2 * C_L * A * sin(AoA)
-        // A simple sin(AoA) works well for small angles and ensures lift is zero when AoA is zero.
-        float liftMagnitude = 0.5f * airDensity * speed * speed * liftCoefficient * wingArea * Mathf.Sin(aoa);
-
-        // Lift Direction: Perpendicular to velocity and in the plane's "up" direction.
-        // The cross product gives a vector perpendicular to both velocity and the plane's right vector (transform.right).
-        Vector3 liftDirection = Vector3.Cross(velocity.normalized, -transform.right);
+        // 3. Lift Direction
+        // Lift must be perpendicular to the airflow (velocity). 
+        // Use the cross product between velocity and the glider's right vector.
+        // Ensure normalization for a unit direction vector.
+        Vector3 liftDirection = Vector3.Cross(velocity.normalized, transform.right).normalized;
 
         // Apply Lift
         Vector3 liftForce = liftDirection * liftMagnitude;
         rb.AddForce(liftForce, ForceMode.Force);
 
-        // 3. Gravity (Handled by rb.useGravity = true, but you can add it explicitly for control)
-        // Vector3 gravity = Physics.gravity * rb.mass;
-        // rb.AddForce(gravity, ForceMode.Force);
 
         // Debug visualization
         Debug.DrawRay(transform.position, velocity.normalized * 5f, Color.blue); // Velocity
