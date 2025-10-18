@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8210b77bc9316ed46854a015248dc8c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dragStrength: 5
+  dragStrength: 10
   forceApplicationRate: 0.5
 --- !u!135 &78408090
 SphereCollider:
