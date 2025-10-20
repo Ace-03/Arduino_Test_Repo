@@ -77,9 +77,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5231a155aa28c34b8d239eab64658e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetAnchor: {fileID: 1140242512485473576}
   targetPostition: {fileID: 5384381217942677970}
   targetLookat: {fileID: 6015426795814858499}
   followSpeed: 1
+  targetStartingPos: {x: 0, y: 0, z: 0}
 --- !u!114 &7994922170232367176
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -99,6 +101,13 @@ MonoBehaviour:
   pitchSpeed: 3
   yawSpeed: 2
   rollLimit: 25
+  verticalClampMax: 85
+  verticalClampMin: -85
+  impactForceMagnitude: 50
+  recoveryTime: 0.7
+  postImpactSpeedReduction: 0.3
+  angularVelocityTumble: 180
+  pitchLocked: 0
 --- !u!114 &5811025859620159673
 MonoBehaviour:
   m_ObjectHideFlags: 0

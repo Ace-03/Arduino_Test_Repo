@@ -21,6 +21,11 @@ public class GlidingSystemV2 : MonoBehaviour
     private float yawSpeed = 1f; // New variable for left/right turning
     [SerializeField]
     private float rollLimit = 45f; // Limits the roll angle for banking
+    [SerializeField]
+    private float verticalClampMax = 85;
+    [SerializeField]
+    private float verticalClampMin = -85;
+
 
     [Header("Collision & Recovery")]
     [SerializeField]
@@ -36,6 +41,7 @@ public class GlidingSystemV2 : MonoBehaviour
     public bool pitchLocked = false; // Public variable to lock rotation when needed
 
     private Rigidbody rb;
+    private CameraFollow camFollow;
     private bool isRecovering = false;
 
     void Start()
@@ -45,6 +51,8 @@ public class GlidingSystemV2 : MonoBehaviour
         rb.useGravity = true;
         // Prevents unrealistic rotation from physics
         rb.freezeRotation = true;
+
+        camFollow = GetComponent<CameraFollow>();
     }
 
     void FixedUpdate()
@@ -86,7 +94,7 @@ public class GlidingSystemV2 : MonoBehaviour
                 newPitch -= 360f;
             }
             // Clamp pitch to prevent over-rotation
-            newPitch = Mathf.Clamp(newPitch, -85f, 85f);
+            newPitch = Mathf.Clamp(newPitch, verticalClampMin, verticalClampMax);
         }
 
         // 2. Yaw (Y-axis, left/right)
@@ -168,6 +176,7 @@ public class GlidingSystemV2 : MonoBehaviour
             rb.angularVelocity = Vector3.zero; // Clear previous velocity
             rb.AddTorque(Random.insideUnitSphere * angularVelocityTumble, ForceMode.VelocityChange); // Start a random spin
 
+            camFollow.MoveTargetPosition(-impactNormal + Vector3.up, impactForceMagnitude);
             // Start the recovery process
             StartCoroutine(HandleImpactAndRecovery());
         }
@@ -195,5 +204,7 @@ public class GlidingSystemV2 : MonoBehaviour
         // Reset the state flag
         isRecovering = false;
         pitchLocked = false;
+
+        camFollow.ResetTargetPosition();
     }
 }

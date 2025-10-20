@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
+    public Transform targetAnchor;
     public Transform targetPostition;
     public Transform targetLookat;
 
@@ -9,9 +10,13 @@ public class CameraFollow : MonoBehaviour
 
     private Transform cam;
 
+    [HideInInspector]
+    public Vector3 targetStartingPos;
+
     private void Start()
     {
         cam = Camera.main.transform;
+        targetStartingPos = targetPostition.localPosition;
     }
 
     private void FixedUpdate()
@@ -23,5 +28,17 @@ public class CameraFollow : MonoBehaviour
     void MoveToTarget(Vector3 targetPosition)
     {
         cam.position = Vector3.Lerp(cam.position, targetPosition, Time.deltaTime * followSpeed);
+    }
+
+    public void MoveTargetPosition(Vector3 dir, float magnitude)
+    {
+        targetPostition.parent = null;
+        targetPostition.position = targetPostition.position + dir * magnitude;
+    }
+
+    public void ResetTargetPosition()
+    {
+        targetPostition.parent = targetAnchor;
+        targetPostition.localPosition = targetStartingPos;
     }
 }
