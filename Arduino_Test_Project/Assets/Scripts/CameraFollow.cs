@@ -10,6 +10,20 @@ public class CameraFollow : MonoBehaviour
 
     private Transform cam;
 
+    public static CameraFollow instance;
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
+
     [HideInInspector]
     public Vector3 targetStartingPos;
 

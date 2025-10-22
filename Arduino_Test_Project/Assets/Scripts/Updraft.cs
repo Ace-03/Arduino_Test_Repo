@@ -37,6 +37,7 @@ public class Updraft : MonoBehaviour
         {
             // 1. Lock the glider's PITCH input
             targetGlider.pitchLocked = true;
+            CameraFollow.instance.MoveTargetPosition(updraftDirection, transform.localScale.y);
         }
     }
 
@@ -84,6 +85,8 @@ public class Updraft : MonoBehaviour
             // 2. Clear references
             targetGlider = null;
             targetRigidbody = null;
+
+            CameraFollow.instance.ResetTargetPosition();
         }
     }
 }
