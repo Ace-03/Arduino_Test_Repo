@@ -3,11 +3,16 @@ using UnityEngine.SceneManagement;
 
 public class GroundCollision : MonoBehaviour
 {
+    bool gameEnded = false;
+
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.CompareTag("Player"))
+        if (collision.collider.CompareTag("Player") && gameEnded == false)
         {
-            EndGame();
+            gameEnded = true;
+            ScoreTracker.Instance.SaveScoreToLeaderboard();
+            LeaderBoardUI.Instance.DisplayScores();
+            Invoke("EndGame", 4f);
         }
     }
 

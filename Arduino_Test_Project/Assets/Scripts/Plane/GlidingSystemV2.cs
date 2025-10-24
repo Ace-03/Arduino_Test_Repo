@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class GlidingSystemV2 : MonoBehaviour
+public class GlidingSystemV2 : MonoBehaviour, IGlider
 {
     [Header("Flight Characteristics")]
     [SerializeField]
