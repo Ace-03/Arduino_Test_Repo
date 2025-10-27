@@ -23,10 +23,10 @@ public class GliderInfoUI : MonoBehaviour
     }
     public void SetHeightText(string text)
     {
-        height.text = "Height: " + text;
+        height.text = "Height: " + text + "m";
     }
     public void SetSpeedText(string text)
     {
-        speed.text = "Speed: " + text;
+        speed.text = "Speed: " + text + "mph";
     }
 }
