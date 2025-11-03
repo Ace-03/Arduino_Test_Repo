@@ -34,7 +34,7 @@ public class ScoreTracker : MonoBehaviour
     void Update()
     {
         score = Mathf.Abs(player.transform.position.z);
-        string height = Mathf.FloorToInt(Mathf.Abs(player.transform.position.y)).ToString();
+        string height = Mathf.FloorToInt(Mathf.Abs(player.transform.position.y - 14)).ToString();
         string speed = Mathf.FloorToInt(playerRb.linearVelocity.magnitude).ToString();
 
         GliderInfoUI.instance.SetScoreText(Mathf.FloorToInt(score).ToString());
