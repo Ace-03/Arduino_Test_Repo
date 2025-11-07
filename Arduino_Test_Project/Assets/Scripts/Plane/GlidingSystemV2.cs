@@ -43,6 +43,7 @@ public class GlidingSystemV2 : MonoBehaviour, IGlider
     private Rigidbody rb;
     private CameraFollow camFollow;
     private bool isRecovering = false;
+    [SerializeField] private bool controlsEnabled;
 
     void Start()
     {
@@ -60,10 +61,12 @@ public class GlidingSystemV2 : MonoBehaviour, IGlider
         // Inputs and Flight Forces are ignored if we are recovering
         if (!isRecovering)
         {
-            float verticalInput = Input.GetAxis("Vertical");
-            float horizontalInput = Input.GetAxis("Horizontal");
-
-            UpdateRotation(-verticalInput * pitchSpeed, horizontalInput * yawSpeed);
+            if (controlsEnabled)
+            {
+                float verticalInput = Input.GetAxis("Vertical");
+                float horizontalInput = Input.GetAxis("Horizontal");
+                UpdateRotation(-verticalInput * pitchSpeed, horizontalInput * yawSpeed);
+            }
 
             ApplyFlightForces();
         }
@@ -206,5 +209,26 @@ public class GlidingSystemV2 : MonoBehaviour, IGlider
         pitchLocked = false;
 
         camFollow.ResetTargetPosition();
+    }
+
+    public void SetControlsEnabled(bool enabled, float delay)
+    {
+        if (enabled)
+        {
+            Invoke(nameof(SetControlsTrue), delay);
+        }
+        else
+        {
+            SetControlsFalse();
+        }
+    }
+
+    private void SetControlsTrue()
+    {
+        controlsEnabled = true;
+    }
+    private void SetControlsFalse()
+    {
+        controlsEnabled = false;
     }
 }

@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ScoreTracker : MonoBehaviour
 {
@@ -42,9 +43,9 @@ public class ScoreTracker : MonoBehaviour
         GliderInfoUI.instance.SetSpeedText(speed);
     }
 
-    public void SetPlayerName(string name)
+    public void SetPlayerName(TMP_InputField input)
     {
-        playerName = name;
+        playerName = input.text;
     }
 
     public void SaveScoreToLeaderboard()
