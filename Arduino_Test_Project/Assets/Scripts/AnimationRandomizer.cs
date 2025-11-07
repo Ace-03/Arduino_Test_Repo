@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class AnimationRandomizer : MonoBehaviour
 {
+    [SerializeField] private float minSpeed = 5f;
+    [SerializeField] private float maxSpeed = 20f;
+
     private float targetpos = 15;
     private float speed = 1;
     private bool dirToggle = false;
@@ -14,7 +17,7 @@ public class AnimationRandomizer : MonoBehaviour
     {
         dirToggle = Random.Range(0, 2) == 0 ? true : false;
         transform.position = new Vector3(Random.Range(-14f, 14f), transform.position.y, transform.position.z);
-        speed = Random.Range(5f, 35f);
+        speed = Random.Range(minSpeed, maxSpeed);
     }
 
     private void Update()
