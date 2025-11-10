@@ -2875,7 +2875,7 @@ PrefabInstance:
       objectReference: {fileID: 74788556}
     - target: {fileID: 6990925933763430042, guid: 1cdd0aa10e5d1454f9e7ac6197ab8437, type: 3}
       propertyPath: m_VersionIndex
-      value: 2346
+      value: 2382
       objectReference: {fileID: 0}
     - target: {fileID: 7994922170232367176, guid: 1cdd0aa10e5d1454f9e7ac6197ab8437, type: 3}
       propertyPath: wingArea
@@ -3841,6 +3841,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3680155863215008619, guid: 0d6d8f890f48518478a5969f8091d188, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 1b57adf72fe57c64887ecaa779761fca, type: 2}
     - target: {fileID: 4294572860875195333, guid: 0d6d8f890f48518478a5969f8091d188, type: 3}
       propertyPath: m_Name
       value: Bird Obstacle (4)
@@ -5904,6 +5908,14 @@ PrefabInstance:
     - target: {fileID: 4390656866375684257, guid: 3e489e58af024dd48968c432c06c5e8e, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.059
+      objectReference: {fileID: 0}
+    - target: {fileID: 5461929484277983392, guid: 3e489e58af024dd48968c432c06c5e8e, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.a
+      value: 0.39215687
+      objectReference: {fileID: 0}
+    - target: {fileID: 6785752376658899386, guid: 3e489e58af024dd48968c432c06c5e8e, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.a
+      value: 0.40392157
       objectReference: {fileID: 0}
     - target: {fileID: 7045706538155808334, guid: 3e489e58af024dd48968c432c06c5e8e, type: 3}
       propertyPath: m_LocalScale.x
