@@ -641,7 +641,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -116.89998, y: -31.200012}
+  m_AnchoredPosition: {x: -160.9, y: 132.6}
   m_SizeDelta: {x: 213.1882, y: 159.6754}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &420693271
@@ -664,7 +664,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 169eb92dc0b38ae4393ce7bea4434b6f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b8fb0b2975cccf540a465b205d4228ec, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1319,6 +1319,8 @@ GameObject:
   - component: {fileID: 1598381997}
   - component: {fileID: 1598381996}
   - component: {fileID: 1598381995}
+  - component: {fileID: 1598381999}
+  - component: {fileID: 1598381998}
   m_Layer: 5
   m_Name: How To Play
   m_TagString: Untagged
@@ -1439,6 +1441,66 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1598381993}
   m_CullTransparentMesh: 1
+--- !u!114 &1598381998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1598381993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2549e8aba1582de44855cfdaf9239e03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetImage: {fileID: 1598381996}
+  hoverSprite: {fileID: 21300000, guid: 7aea00f4cb94eb049ba96891d8693a9d, type: 3}
+  defaultSprite: {fileID: 21300000, guid: 4b0911a4591f72c4cbb348b6a96b3d1b, type: 3}
+--- !u!114 &1598381999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1598381993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1598381998}
+          m_TargetAssemblyTypeName: OnMouseHover, Assembly-CSharp
+          m_MethodName: OnHoverEnter
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1598381998}
+          m_TargetAssemblyTypeName: OnMouseHover, Assembly-CSharp
+          m_MethodName: OnHoverExit
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1614000411
 GameObject:
   m_ObjectHideFlags: 0
@@ -1571,7 +1633,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 999ec1bf7feb0304c8af051964d80a6c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 29952b2fa7ca136429632081e9680a15, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1663,7 +1725,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 150.75867, y: -98.01927}
+  m_AnchoredPosition: {x: -160.9, y: -26.9}
   m_SizeDelta: {x: 191.4803, y: 143.4164}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1771424863
@@ -1686,7 +1748,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 169eb92dc0b38ae4393ce7bea4434b6f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b8fb0b2975cccf540a465b205d4228ec, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1716,6 +1778,8 @@ GameObject:
   - component: {fileID: 1888217610}
   - component: {fileID: 1888217609}
   - component: {fileID: 1888217608}
+  - component: {fileID: 1888217612}
+  - component: {fileID: 1888217611}
   m_Layer: 5
   m_Name: Start
   m_TagString: Untagged
@@ -1836,6 +1900,66 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1888217606}
   m_CullTransparentMesh: 1
+--- !u!114 &1888217611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1888217606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2549e8aba1582de44855cfdaf9239e03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetImage: {fileID: 1888217609}
+  hoverSprite: {fileID: 21300000, guid: b61643f7947f0c748ab6a90f99c56066, type: 3}
+  defaultSprite: {fileID: 21300000, guid: e0dcffab02ed7914789dd5ecc7ff9413, type: 3}
+--- !u!114 &1888217612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1888217606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1888217611}
+          m_TargetAssemblyTypeName: OnMouseHover, Assembly-CSharp
+          m_MethodName: OnHoverEnter
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1888217611}
+          m_TargetAssemblyTypeName: OnMouseHover, Assembly-CSharp
+          m_MethodName: OnHoverExit
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1945909889
 GameObject:
   m_ObjectHideFlags: 0
@@ -1984,6 +2108,8 @@ GameObject:
   - component: {fileID: 1987049512}
   - component: {fileID: 1987049511}
   - component: {fileID: 1987049510}
+  - component: {fileID: 1987049514}
+  - component: {fileID: 1987049513}
   m_Layer: 5
   m_Name: Go Back Button
   m_TagString: Untagged
@@ -2105,6 +2231,66 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1987049508}
   m_CullTransparentMesh: 1
+--- !u!114 &1987049513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1987049508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2549e8aba1582de44855cfdaf9239e03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetImage: {fileID: 1987049511}
+  hoverSprite: {fileID: 21300000, guid: b8fb0b2975cccf540a465b205d4228ec, type: 3}
+  defaultSprite: {fileID: 21300000, guid: 169eb92dc0b38ae4393ce7bea4434b6f, type: 3}
+--- !u!114 &1987049514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1987049508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1987049513}
+          m_TargetAssemblyTypeName: OnMouseHover, Assembly-CSharp
+          m_MethodName: OnHoverEnter
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1987049513}
+          m_TargetAssemblyTypeName: OnMouseHover, Assembly-CSharp
+          m_MethodName: OnHoverExit
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &2065334238
 GameObject:
   m_ObjectHideFlags: 0
