@@ -3,39 +3,28 @@ using UnityEngine;
 
 public class GlidingSystemV2 : MonoBehaviour, IGlider
 {
+    [SerializeField] private bool useArduinoInput = false;
+
     [Header("Flight Characteristics")]
-    [SerializeField]
-    private float liftCoefficient = 0.1f; // How much lift is generated (adjust for "floatiness")
-    [SerializeField]
-    private float dragCoefficient = 0.05f; // How much air resistance is applied
-    [SerializeField]
-    private float airDensity = 1.225f; // Density of air (standard at sea level)
-    [SerializeField]
-    private float wingArea = 2f; // Conceptual wing area (adjust for overall effect)
+    [SerializeField] private float liftCoefficient = 0.1f; // How much lift is generated (adjust for "floatiness")
+    [SerializeField] private float dragCoefficient = 0.05f; // How much air resistance is applied
+    [SerializeField] private float airDensity = 1.225f; // Density of air (standard at sea level)
+    [SerializeField] private float wingArea = 2f; // Conceptual wing area (adjust for overall effect)
 
     [Header("Turning Controls")] // New Header for clarity
 
-    [SerializeField]
-    private float pitchSpeed = 1f; // Renamed for clarity (was turnSpeed)
-    [SerializeField]
-    private float yawSpeed = 1f; // New variable for left/right turning
-    [SerializeField]
-    private float rollLimit = 45f; // Limits the roll angle for banking
-    [SerializeField]
-    private float verticalClampMax = 85;
-    [SerializeField]
-    private float verticalClampMin = -85;
+    [SerializeField] private float pitchSpeed = 1f; // Renamed for clarity (was turnSpeed)
+    [SerializeField] private float yawSpeed = 1f; // New variable for left/right turning
+    [SerializeField] private float rollLimit = 45f; // Limits the roll angle for banking
+    [SerializeField] private float verticalClampMax = 85;
+    [SerializeField] private float verticalClampMin = -85;
 
 
     [Header("Collision & Recovery")]
-    [SerializeField]
-    private float impactForceMagnitude = 500f; // Force applied on impact to knock it back
-    [SerializeField]
-    private float recoveryTime = 2f; // Duration of the tumbling and recovery phase
-    [SerializeField]
-    private float postImpactSpeedReduction = 0.5f; // Percentage of speed remaining after recovery
-    [SerializeField]
-    private float angularVelocityTumble = 180f; // Max rotation speed during tumble
+    [SerializeField] private float impactForceMagnitude = 500f; // Force applied on impact to knock it back
+    [SerializeField] private float recoveryTime = 2f; // Duration of the tumbling and recovery phase
+    [SerializeField] private float postImpactSpeedReduction = 0.5f; // Percentage of speed remaining after recovery
+    [SerializeField] private float angularVelocityTumble = 180f; // Max rotation speed during tumble
 
     [HideInInspector]
     public bool pitchLocked = false; // Public variable to lock rotation when needed
@@ -63,8 +52,20 @@ public class GlidingSystemV2 : MonoBehaviour, IGlider
         {
             if (controlsEnabled)
             {
-                float verticalInput = Input.GetAxis("Vertical");
-                float horizontalInput = Input.GetAxis("Horizontal");
+                float verticalInput = 0;
+                float horizontalInput = 0;
+
+                if (useArduinoInput)
+                {
+                   verticalInput = ArduinoSerialInput.VerticalInput;
+                   horizontalInput = ArduinoSerialInput.HorizontalInput;
+                }
+                else
+                {
+                   verticalInput = Input.GetAxis("Vertical");
+                   horizontalInput = Input.GetAxis("Horizontal");
+                }
+
                 UpdateRotation(-verticalInput * pitchSpeed, horizontalInput * yawSpeed);
             }
 
