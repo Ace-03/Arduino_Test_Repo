@@ -2898,6 +2898,10 @@ PrefabInstance:
       value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 7994922170232367176, guid: 1cdd0aa10e5d1454f9e7ac6197ab8437, type: 3}
+      propertyPath: useArduinoInput
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7994922170232367176, guid: 1cdd0aa10e5d1454f9e7ac6197ab8437, type: 3}
       propertyPath: verticalClampMax
       value: 70
       objectReference: {fileID: 0}
@@ -3653,6 +3657,52 @@ Transform:
   - {fileID: 1699843454}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1336461511
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1336461513}
+  - component: {fileID: 1336461512}
+  m_Layer: 0
+  m_Name: Reader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1336461512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1336461511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c2f59f023b4c5c47b221100bf225c5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  portName: COM4
+  baudRate: 9600
+--- !u!4 &1336461513
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1336461511}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1371012656
 GameObject:
   m_ObjectHideFlags: 0
@@ -4204,6 +4254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef9fe1886f504644ea7b7fda1852b95f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  reader: {fileID: 1336461512}
 --- !u!1001 &1431646358
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6811,3 +6862,4 @@ SceneRoots:
   - {fileID: 1402497417}
   - {fileID: 1851782080}
   - {fileID: 429193637}
+  - {fileID: 1336461513}

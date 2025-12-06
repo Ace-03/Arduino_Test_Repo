@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 
 public class GroundCollision : MonoBehaviour
 {
+    public ArduinoSerialInput reader;
     bool gameEnded = false;
 
     private void OnCollisionEnter(Collision collision)
@@ -18,6 +19,7 @@ public class GroundCollision : MonoBehaviour
 
     private void EndGame()
     {
+        reader.ClosePort();
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

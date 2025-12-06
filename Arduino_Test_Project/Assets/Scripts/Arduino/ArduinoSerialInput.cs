@@ -1,124 +1,130 @@
+﻿using System;
 using System.IO.Ports;
-using UnityEngine;
 using System.Threading;
-using System;
+using UnityEngine;
 
 public class ArduinoSerialInput : MonoBehaviour
 {
-    // --- Configuration ---
-    [Header("Serial Configuration")]
-    [Tooltip("The COM port your Arduino is connected to (e.g., COM3 on Windows, /dev/ttyACM0 on Linux)")]
-    [SerializeField] private string portName = "COM3";
-    [Tooltip("MUST match the BAUD_RATE in the Arduino sketch (e.g., 9600)")]
-    [SerializeField] private int baudRate = 9600;
+    [Header("Serial Config")]
+    public string portName = "COM4";
+    public int baudRate = 9600;
 
-    // --- Static Input Properties ---
-    // These static variables are what GlidingSystemV2 will read.
-    public static float HorizontalInput { get; private set; } = 0f;
-    public static float VerticalInput { get; private set; } = 0f;
+    // Public values your game can read
+    public static float HorizontalInput { get; private set; }
+    public static float VerticalInput { get; private set; }
 
-    // --- Internal State ---
     private SerialPort serialPort;
     private Thread readThread;
-    private bool isRunning = false;
-    private readonly object lockObject = new object(); // For thread-safe access
+    private volatile bool isRunning = false;
+
+    // Buffer for passing thread -> main thread
+    private string latestLine = "";
+    private readonly object lineLock = new object();
 
     private void Start()
     {
-        InitializeSerialPort();
+        TryOpenPort();
     }
 
-    private void InitializeSerialPort()
+    private void TryOpenPort()
     {
         try
         {
             serialPort = new SerialPort(portName, baudRate);
+            serialPort.NewLine = "\n";          // important
+            serialPort.ReadTimeout = 50;
+
             serialPort.Open();
-            serialPort.ReadTimeout = 1; // Short timeout to prevent thread from stalling
 
             isRunning = true;
-            // Start the reading process in a separate thread
-            readThread = new Thread(ReadSerialData);
+            readThread = new Thread(SerialReadLoop);
             readThread.Start();
 
-            Debug.Log($"Serial Port {portName} opened successfully at {baudRate} baud.");
+            Debug.Log("[Serial] Port " + portName + " opened.");
         }
         catch (Exception e)
         {
-            Debug.LogError($"Error opening serial port {portName}: {e.Message}");
-            // Handle the error (e.g., disable controls if the port fails to open)
+            Debug.LogError("[Serial] Failed to open " + portName + ": " + e.Message);
         }
     }
 
-    private void ReadSerialData()
+    private void SerialReadLoop()
     {
-        // 
         while (isRunning && serialPort != null && serialPort.IsOpen)
         {
             try
             {
-                // Read until the '\n' terminator (sent by Arduino's Serial.println)
-                string data = serialPort.ReadLine();
-                ParseData(data);
+                string line = serialPort.ReadLine().Trim();
+
+                lock (lineLock)
+                {
+                    latestLine = line;  // store for main thread
+                }
             }
             catch (TimeoutException)
             {
-                // This is normal, just means no new line came in before the timeout
+                // expected, ignore
             }
             catch (Exception e)
             {
-                // Log any unexpected errors
-                if (isRunning) // Only log if we didn't explicitly close the port
-                {
-                    Debug.LogWarning($"Serial reading error: {e.Message}");
-                }
+                Debug.LogWarning("[Serial Thread] Error: " + e.Message);
             }
         }
     }
 
-    private void ParseData(string data)
+    private void Update()
     {
-        // Expected Format: "H_VALUE|V_VALUE"
-        string[] values = data.Split('|');
+        string line = "";
 
-        if (values.Length == 2)
+        lock (lineLock)
         {
-            float hVal = 0f;
-            float vVal = 0f;
-
-            // Attempt to parse the strings into floats
-            bool hSuccess = float.TryParse(values[0], out hVal);
-            bool vSuccess = float.TryParse(values[1], out vVal);
-
-            if (hSuccess && vSuccess)
+            if (!string.IsNullOrEmpty(latestLine))
             {
-                // Use the lock to ensure Unity's main thread doesn't read 
-                // while the new thread is writing to the static variables
-                lock (lockObject)
-                {
-                    HorizontalInput = hVal;
-                    VerticalInput = vVal;
-                }
+                line = latestLine;
+                latestLine = "";
             }
+        }
+
+        if (!string.IsNullOrEmpty(line))
+        {
+            Debug.Log("[Serial] " + line);  // safe to log on main thread
+            ParseLine(line);
+        }
+    }
+
+    private void ParseLine(string line)
+    {
+        if (!line.Contains("|"))
+            return;
+
+        string[] parts = line.Split('|');
+        if (parts.Length != 2)
+            return;
+
+        if (float.TryParse(parts[0], out float h) &&
+            float.TryParse(parts[1], out float v))
+        {
+            HorizontalInput = h;
+            VerticalInput = v;
         }
     }
 
     private void OnApplicationQuit()
     {
-        // 1. Set the flag to stop the thread loop
         isRunning = false;
 
-        // 2. Wait for the thread to finish (optional, but good practice)
         if (readThread != null && readThread.IsAlive)
-        {
             readThread.Join();
-        }
 
-        // 3. Close the serial port
+        ClosePort();
+    }
+
+    public void ClosePort()
+    {
         if (serialPort != null && serialPort.IsOpen)
         {
             serialPort.Close();
-            Debug.Log($"Serial Port {portName} closed.");
+            Debug.Log("[Serial] Port closed.");
         }
     }
 }
