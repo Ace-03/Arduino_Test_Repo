@@ -59,14 +59,19 @@ public class GlidingSystemV2 : MonoBehaviour, IGlider
                 {
                    verticalInput = ArduinoSerialInput.VerticalInput;
                    horizontalInput = ArduinoSerialInput.HorizontalInput;
+
+                   float targetPitch = verticalInput * verticalClampMax; 
+                   float targetYaw = horizontalInput * rollLimit; 
+
+                   UpdateRotationToTarget(targetPitch, targetYaw);
                 }
                 else
                 {
                    verticalInput = Input.GetAxis("Vertical");
                    horizontalInput = Input.GetAxis("Horizontal");
-                }
 
-                UpdateRotation(-verticalInput * pitchSpeed, horizontalInput * yawSpeed);
+                   UpdateRotation(-verticalInput * pitchSpeed, horizontalInput * yawSpeed);
+                }
             }
 
             ApplyFlightForces();
@@ -81,6 +86,29 @@ public class GlidingSystemV2 : MonoBehaviour, IGlider
     // --------------------------------------------------------------------------------
     // Rotation and Input
     // --------------------------------------------------------------------------------
+
+    void UpdateRotationToTarget(float targetPitch, float targetRoll)
+    {
+        Vector3 currentRotation = transform.localEulerAngles;
+
+        // Convert angles >180 to -180..180 for proper lerp
+        float currentPitch = currentRotation.x;
+        if (currentPitch > 180f) currentPitch -= 360f;
+
+        // Smoothly move pitch to target
+        float newPitch = Mathf.Lerp(currentPitch, targetPitch, Time.fixedDeltaTime * 5f);
+
+        // Smoothly move roll to target
+        float currentRoll = currentRotation.z;
+        if (currentRoll > 180f) currentRoll -= 360f;
+
+        float newRoll = Mathf.Lerp(currentRoll, targetRoll, Time.fixedDeltaTime * 5f);
+
+        // Yaw can still be controlled via delta rotation from Arduino
+        transform.Rotate(Vector3.up, 0f, Space.Self); // optionally keep yaw from Arduino
+
+        transform.localRotation = Quaternion.Euler(newPitch, transform.localEulerAngles.y, newRoll);
+    }
 
     void UpdateRotation(float pitchAdjustment, float yawAdjustment)
     {

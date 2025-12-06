@@ -8,8 +8,8 @@
 #define GYRO_YOUT_H 0x45
 
 // Expected gyro range (adjust if needed)
-const float MIN_GYRO = -250.0f;
-const float MAX_GYRO =  250.0f;
+const float MIN_GYRO = -20.0f;
+const float MAX_GYRO =  20.0f;
 
 void setup() {
   Serial.begin(9600);
