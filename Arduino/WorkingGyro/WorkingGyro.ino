@@ -8,8 +8,8 @@
 #define GYRO_YOUT_H 0x45
 
 // Expected angular velocity range for mapping (deg/sec)
-const float MIN_GYRO = -20.0f;
-const float MAX_GYRO = 20.0f;
+const float MIN_GYRO = -10.0f;
+const float MAX_GYRO = 10.0f;
 
 // Calibration
 float neutralX = 0;

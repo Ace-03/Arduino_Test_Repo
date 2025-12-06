@@ -66,9 +66,9 @@ public class GlidingSystemV2 : MonoBehaviour, IGlider
                    horizontalInput = Input.GetAxis("Horizontal");
                 }
 
-                horizontalInput = RoundValue(horizontalInput);
-                verticalInput = RoundValue(verticalInput);
-
+                horizontalInput = Mathf.Abs(horizontalInput) < 0.1f ? 0 : horizontalInput;
+                verticalInput = Mathf.Abs(verticalInput) < 0.1f ? 0 : verticalInput;
+                
                 UpdateRotation(-verticalInput * pitchSpeed, horizontalInput * yawSpeed);
             }
 
