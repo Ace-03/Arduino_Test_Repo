@@ -1,71 +1,84 @@
 #include <Wire.h>
 
-// Replace with your gyro's I2C address (MPU6050 defaults to 0x68)
+// MPU6050 I2C address
 #define GYRO_ADDRESS 0x68
 
-// Gyroscope register addresses for MPU6050
+// Gyro registers
 #define GYRO_XOUT_H 0x43
 #define GYRO_YOUT_H 0x45
 
-// Expected gyro range (adjust if needed)
+// Expected angular velocity range for mapping (deg/sec)
 const float MIN_GYRO = -20.0f;
-const float MAX_GYRO =  20.0f;
+const float MAX_GYRO = 20.0f;
+
+// Calibration
+float neutralX = 0;
+float neutralY = 0;
+const int CALIBRATION_SAMPLES = 200;
+
+// Filtering
+float prevX = 0;
+float prevY = 0;
+const float ALPHA = 0.1; // smoothing factor (0 = no movement, 1 = no smoothing)
 
 void setup() {
   Serial.begin(9600);
   Wire.begin();
 
-  // Wake up the MPU6050
+  // Wake up MPU6050
   Wire.beginTransmission(GYRO_ADDRESS);
   Wire.write(0x6B);
   Wire.write(0x00);
   Wire.endTransmission(true);
-
   delay(100);
+
+  // --- Calibration ---
+  long sumX = 0;
+  long sumY = 0;
+  for (int i = 0; i < CALIBRATION_SAMPLES; i++) {
+    int16_t rawX = readGyro(GYRO_XOUT_H);
+    int16_t rawY = readGyro(GYRO_YOUT_H);
+    sumX += rawX;
+    sumY += rawY;
+    delay(5);
+  }
+  neutralX = (float)sumX / CALIBRATION_SAMPLES / 131.0; // convert to deg/sec
+  neutralY = (float)sumY / CALIBRATION_SAMPLES / 131.0;
+
+  Serial.println("Gyro calibrated. Neutral values:");
+  Serial.print("X: "); Serial.println(neutralX, 4);
+  Serial.print("Y: "); Serial.println(neutralY, 4);
+  delay(500);
 }
 
 void loop() {
   // Read raw gyro values
-  int16_t rawX = readGyro(GYRO_XOUT_H);
-  int16_t rawY = readGyro(GYRO_YOUT_H);
+  float gyroX = readGyro(GYRO_XOUT_H) / 131.0 - neutralX;
+  float gyroY = readGyro(GYRO_YOUT_H) / 131.0 - neutralY;
 
-  // Convert raw to degrees/sec
-  const float gyroScale = 131.0;
-  float gyroX = rawX / gyroScale;
-  float gyroY = rawY / gyroScale;
+  // Apply simple low-pass filter to reduce jitter
+  float filteredX = prevX * (1.0 - ALPHA) + gyroX * ALPHA;
+  float filteredY = prevY * (1.0 - ALPHA) + gyroY * ALPHA;
+  prevX = filteredX;
+  prevY = filteredY;
 
-  // Normalize to -1 → +1
-  float mappedX = mapToMinus1Plus1(gyroX);
-  float mappedY = mapToMinus1Plus1(gyroY);
+  // Map to -1 → +1
+  float mappedX = mapToMinus1Plus1(filteredX);
+  float mappedY = mapToMinus1Plus1(filteredY);
 
-  // Convert floats to strings safely
-  char xStr[10];
-  char yStr[10];
-
-  dtostrf(mappedX,  1, 4, xStr); // (value, min width, decimals, buffer)
-  dtostrf(mappedY,  1, 4, yStr);
-
-  // Build final message
-  char message[32];
-  strcpy(message, xStr);
-  strcat(message, "|");
-  strcat(message, yStr);
-  strcat(message, "\n");
-
-  // Send the safe message
-  Serial.print(message);
+  // Send to Unity
+  Serial.print(mappedX, 4);
+  Serial.print("|");
+  Serial.println(mappedY, 4);
 
   delay(50);
 }
 
-// Maps a value in MIN_GYRO → MAX_GYRO to -1 → 1
+// Maps a value from MIN_GYRO → MAX_GYRO to -1 → 1
 float mapToMinus1Plus1(float value) {
   float n = (2.0f * (value - MIN_GYRO) / (MAX_GYRO - MIN_GYRO)) - 1.0f;
-
-  // Clamp
   if (n < -1) n = -1;
   if (n > 1) n = 1;
-
   return n;
 }
 
